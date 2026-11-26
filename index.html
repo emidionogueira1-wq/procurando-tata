@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Procurando Tata</title>
 <style>
 /* VOICE: aventura fofa, toon
@@ -10,15 +10,19 @@
    PICTURE: o próprio jogo, cenário com profundidade
    COLOUR and TYPE: céu claro, contornos roxo-escuros, letras gordas com contorno
    LAYOUT: canvas 16:9 centralizado, barras escuras nas sobras */
-html,body{margin:0;height:100%;background:#1d1530;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
-canvas{display:block;width:100vw;height:100vh;outline:none}#c{position:fixed;inset:0;z-index:1}#c3{position:fixed;inset:0;display:none;z-index:0}.tb{z-index:3}#tc{z-index:3}#rot{z-index:9}.tb[data-k=b]{display:none;right:118px;bottom:36px;width:66px;height:66px;line-height:62px;font-size:13px}body.f3 .tb[data-k=b]{display:block}
+html,body{margin:0;height:100%;background:#1d1530;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;overscroll-behavior:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%}body{position:fixed;inset:0}*{-webkit-tap-highlight-color:transparent}
+canvas{display:block;width:100vw;height:100vh;height:100dvh;outline:none;touch-action:none}#c{position:fixed;inset:0;z-index:1}#c3{position:fixed;inset:0;display:none;z-index:0}.tb{z-index:3}#tc{z-index:3}#rot{z-index:9}.tb[data-k=b]{display:none;right:118px;bottom:36px;width:66px;height:66px;line-height:62px;font-size:13px}body.f3 .tb[data-k=b]{display:block}
 #tc{position:fixed;inset:0;pointer-events:none}
 #tc[hidden]{display:none}
-.tb{position:absolute;pointer-events:auto;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.28);border:2px solid rgba(255,255,255,.6);color:#fff;font:700 22px/60px "Trebuchet MS",sans-serif;text-align:center;touch-action:none}
-.tb.on{background:rgba(255,211,77,.6)}
-.tb[data-k=l]{left:16px;bottom:20px}.tb[data-k=r]{left:96px;bottom:20px}.tb[data-k=u]{left:56px;bottom:96px}
-.tb[data-k=j]{right:20px;bottom:28px;width:84px;height:84px;line-height:80px;font-size:15px}
-.tb[data-k=p]{right:16px;top:12px;width:44px;height:44px;line-height:40px;font-size:16px}.tb[data-k=m]{right:68px;top:12px;width:44px;height:44px;line-height:40px;font-size:16px}
+.tb{position:absolute;pointer-events:auto;width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.26);border:2px solid rgba(255,255,255,.6);color:#fff;font:700 20px/54px "Trebuchet MS",sans-serif;text-align:center;touch-action:none;-webkit-user-select:none;user-select:none}
+.tb.on{background:rgba(255,211,77,.65)}
+.tb[data-k=u]{left:calc(env(safe-area-inset-left) + 74px);bottom:calc(env(safe-area-inset-bottom) + 128px)}
+.tb[data-k=d]{left:calc(env(safe-area-inset-left) + 74px);bottom:calc(env(safe-area-inset-bottom) + 12px)}
+.tb[data-k=l]{left:calc(env(safe-area-inset-left) + 16px);bottom:calc(env(safe-area-inset-bottom) + 70px)}
+.tb[data-k=r]{left:calc(env(safe-area-inset-left) + 132px);bottom:calc(env(safe-area-inset-bottom) + 70px)}
+.tb[data-k=j]{right:calc(env(safe-area-inset-right) + 18px);bottom:calc(env(safe-area-inset-bottom) + 30px);width:84px;height:84px;line-height:80px;font-size:18px}
+.tb[data-k=p]{left:calc(50% + 6px);top:calc(env(safe-area-inset-top) + 8px);width:44px;height:44px;line-height:40px;font-size:16px}
+.tb[data-k=m]{left:calc(50% - 50px);top:calc(env(safe-area-inset-top) + 8px);width:44px;height:44px;line-height:40px;font-size:16px}
 #rot{display:none;position:fixed;inset:0;background:#1d1530;color:#fff;z-index:9;flex-direction:column;align-items:center;justify-content:center;gap:14px;font:700 20px "Trebuchet MS",sans-serif;text-align:center;padding:20px}
 #rot span{font-weight:400;font-size:15px;opacity:.85}#rot button{font:700 16px "Trebuchet MS",sans-serif;padding:12px 22px;border-radius:24px;border:0;background:#ffd34d;color:#241b33}
 @media (orientation:portrait) and (pointer:coarse){#rot{display:flex}}
@@ -32,7 +36,7 @@ canvas{display:block;width:100vw;height:100vh;outline:none}#c{position:fixed;ins
 <canvas id="c" tabindex="0"></canvas>
 <div id="rot"><div class="ph"></div><b>Gire o celular para a horizontal</b><span>O jogo foi feito para tela deitada</span><button id="rotb" type="button">Tela cheia</button></div>
 <video id="v" playsinline webkit-playsinline loop preload="auto" style="position:fixed;left:-9999px;top:0;width:64px;height:64px"></video>
-<div id="tc" hidden><div class="tb" data-k="l">&#9664;</div><div class="tb" data-k="r">&#9654;</div><div class="tb" data-k="u">&#9650;</div><div class="tb" data-k="j">OK</div><div class="tb" data-k="b">BOLA</div><div class="tb" data-k="p">II</div><div class="tb" data-k="m">M</div></div>
+<div id="tc" hidden><div class="tb" data-k="l">&#9664;</div><div class="tb" data-k="r">&#9654;</div><div class="tb" data-k="u">&#9650;</div><div class="tb" data-k="d">&#9660;</div><div class="tb" data-k="j">OK</div><div class="tb" data-k="b">BOLA</div><div class="tb" data-k="p">II</div><div class="tb" data-k="m">M</div></div>
 <script>/* three.js r160 - MIT License - https://threejs.org */
 0,/**
  * @license
@@ -62,7 +66,13 @@ let padName='',padT=0,lastIn='kb';addEventListener('gamepadconnected',e=>{padNam
 function rumble(ms,str){try{for(const g of (navigator.getGamepads?navigator.getGamepads():[])){if(g&&g.vibrationActuator&&g.vibrationActuator.playEffect)g.vibrationActuator.playEffect('dual-rumble',{duration:ms,strongMagnitude:str,weakMagnitude:str*.6}).catch(()=>{})}}catch(e){}try{if(lastIn==='touch'&&navigator.vibrate)navigator.vibrate(Math.min(ms,80))}catch(e){}}
 function pollPad(){let ps=[];try{ps=navigator.getGamepads?navigator.getGamepads():[]}catch(e){}const s={};for(const g of ps){if(!g)continue;const ax=g.axes[0]||0,ay=g.axes[1]||0,b=i=>g.buttons[i]&&g.buttons[i].pressed;if(ax<-.4||b(14))s.l=1;if(ax>.4||b(15))s.r=1;if(ay<-.5||b(12))s.u=1;if(ay>.5||b(13))s.d=1;if(b(0)||b(7))s.j=1;if(b(1)||b(2))s.b=1;if(b(9))s.p=1;if(b(3)||b(8))s.m=1;const rx=g.axes[2]||0,ry=g.axes[3]||0;if(rx<-.5)s.l=1;if(rx>.5)s.r=1;if(ry<-.5)s.u=1;if(ry>.5)s.d=1;}for(const k in s)if(!GP[k]){P[k]=true;lastIn='pad'}GP=s;}
 const held=k=>!!(K[k]||GP[k]||T[k]);
-if('ontouchstart' in window||navigator.maxTouchPoints>0){const tc=document.getElementById('tc');tc.hidden=false;tc.querySelectorAll('[data-k]').forEach(b=>{const k=b.dataset.k;const on=e=>{e.preventDefault();initAudio();lastIn='touch';if(S==='splash'){leaveSplash();return}if(!T[k])P[k]=true;T[k]=true;b.classList.add('on')};const off=e=>{e.preventDefault();T[k]=false;b.classList.remove('on')};b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('pointerleave',off);});}
+if('ontouchstart' in window||navigator.maxTouchPoints>0){const tc=document.getElementById('tc');tc.hidden=false;const btns=[...tc.querySelectorAll('[data-k]')];
+ const tu=e=>{e.preventDefault();initAudio();lastIn='touch';if(e.type==='touchstart'&&S==='splash'){leaveSplash();return}const now={};for(const tch of e.touches){const el=document.elementFromPoint(tch.clientX,tch.clientY);const bt=el&&el.closest?el.closest('.tb'):null;if(bt)now[bt.dataset.k]=1}
+  for(const bt of btns){const k=bt.dataset.k,on=!!now[k];if(on&&!T[k])P[k]=true;T[k]=on;bt.classList.toggle('on',on)}};
+ for(const ev of ['touchstart','touchmove','touchend','touchcancel'])tc.addEventListener(ev,tu,{passive:false});
+ addEventListener('blur',()=>{for(const bt of btns){T[bt.dataset.k]=false;bt.classList.remove('on')}});}
+document.addEventListener('touchmove',e=>{e.preventDefault()},{passive:false});document.addEventListener('gesturestart',e=>e.preventDefault());document.addEventListener('dblclick',e=>e.preventDefault());document.addEventListener('contextmenu',e=>e.preventDefault());
+addEventListener('orientationchange',()=>setTimeout(resize,250));try{visualViewport&&visualViewport.addEventListener('resize',resize)}catch(e){}
 let clickX=-1;
 cv.addEventListener('pointerdown',e=>{initAudio();try{cv.focus()}catch(_){}if(S==='splash'){leaveSplash();return}clickX=((e.clientX*DP)-OX)/SC;P.click=true;});
 function fs(){try{const d=document,el=d.documentElement;if(!(d.fullscreenElement||d.webkitFullscreenElement)){const r=(el.requestFullscreen||el.webkitRequestFullscreen);if(r){const q=r.call(el);if(q&&q.catch)q.catch(()=>{})}}else{const x=(d.exitFullscreen||d.webkitExitFullscreen);if(x){const q=x.call(d);if(q&&q.catch)q.catch(()=>{})}}}catch(e){}}
